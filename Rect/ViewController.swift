@@ -34,12 +34,9 @@ class ViewController: UIViewController {
     @objc private func tapOccured(_ tap: UITapGestureRecognizer) {
         
         tapCount += 1
-        print ("tap number:", tapCount)
-        
         if tapCount == 1 {
             rectTopCornerPoint = tap.location(in: self.view)
             drawCircle(center: rectTopCornerPoint, radius: CGFloat(15.0), viewSpot: self.view)
-            print(self.view.subviews.count)
         }
         else {
             rectBottomCornerPoint = tap.location(in: self.view)
@@ -59,8 +56,7 @@ class ViewController: UIViewController {
         //as told in requirements - don't draw small rects
         if h < 100.0  || w < 100.0  {
             tapCount = 0
-            print ("too small")
-                return
+            return
         }
         
         let newRect = TappableRect(frame: CGRect(origin: rectTopCornerPoint, size: size))
@@ -75,8 +71,7 @@ class ViewController: UIViewController {
     @objc private  func panRecog(pan : UIPanGestureRecognizer){
         switch pan.state {
         case .began : rectTopCornerPoint = pan.location(ofTouch: 0, in: self.view)
-        
-            print("began")
+            layerLast.removeFromSuperlayer()
         case .changed :
             rectBottomCornerPoint = pan.location(ofTouch: 0, in: self.view)
             isViewForPan = true
@@ -84,11 +79,7 @@ class ViewController: UIViewController {
                 viewLast?.removeFromSuperview()
             }
             setNewRect()
-//            if  viewLast != nil {
-//                viewLast?.backgroundColor = (viewLast as! TappableRect).lastColor
-//            }
         case .ended :
-            print("end")
             isViewForPan = false
             viewLast = nil
 
@@ -99,15 +90,10 @@ class ViewController: UIViewController {
     }
     
    private func setGestures(){
-//        self.view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panRecog(pan:))))
          self.view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panRecog(pan:))))
         let gestTap = UITapGestureRecognizer(target: self, action: #selector(tapOccured(_ :)))
         self.view.addGestureRecognizer(gestTap)
         
-    }
-    
-    @objc private func printVi(){
-        print ("yep!!")
     }
     
     

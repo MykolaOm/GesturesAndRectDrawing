@@ -15,7 +15,7 @@ class TappableRect: UIView {
     private var numberOfTouches = 0
     private var activeSpots = [Int]()
     private var spotsFlag = 0
-    private let areaToCatchTapInRect : CGFloat = 35.0
+    private let areaToCatchTapInRect : CGFloat = 50.0 // less is too small .bigger is not comfort. if calculated - when small size. isn't comfort...
     /* keys for resizing */
     private let widthKeys = [12,21,34,43]
     private let heightKeys = [14,41,23,32]
@@ -52,21 +52,17 @@ class TappableRect: UIView {
         self.removeFromSuperview()
     }
     
-    @objc private func changeColor(pan:UILongPressGestureRecognizer ) {
-            pan.minimumPressDuration = 1.5
+    @objc private func changeColor(pan: UILongPressGestureRecognizer ) {
+        pan.minimumPressDuration = 0.5
+        if pan.state == UIGestureRecognizerState.ended {
             self.backgroundColor = randomColor()
+        }
     }
     @objc private func panRecog(pan : UIPanGestureRecognizer){
             if pan.state == .began || pan.state == .changed {
-                let translation = pan.translation(in: pan.view)
+                let translation = pan.translation(in: pan.view?.superview)
                 let posX = (self.center.x) + translation.x
                 let posY = (self.center.y) + translation.y
-/*  after rotation occured inversed translation
-    1  0  0  1      normal
-    0 -1  1  0    turn left on 90
-   -1  0  0  1    turn left on 90
-    0  1  1  0    turn left on 90
-*/
                 self.center = CGPoint(x: posX, y: posY)
                 pan.setTranslation(CGPoint.zero, in: pan.view)
             }
@@ -76,7 +72,6 @@ class TappableRect: UIView {
         superview?.bringSubview(toFront: (tap.view)!)
         if spotsFlag == 0 { createSpots() }
         else { removeSpots() }
-            
     }
     
     @objc private func pinchScale(byReactingTo pinchRecognizer: UIPinchGestureRecognizer){
@@ -85,23 +80,25 @@ class TappableRect: UIView {
             touchArray.append(pinchRecognizer.location(ofTouch: 1, in: self))
         }
         if distance(touchArray, spots) {
-            if pinchRecognizer.state == .began || pinchRecognizer.state == .changed {
-                var scaleX : CGFloat = 1.0
-                var scaleY : CGFloat = 1.0
-                if activeSpots.count == 2 {
-                    let positionCode = activeSpots[0] * 10 + activeSpots[1]
+            if !activeSpots.contains(5) {
+                if pinchRecognizer.state == .began || pinchRecognizer.state == .changed {
+                    var scaleX : CGFloat = 1.0
+                    var scaleY : CGFloat = 1.0
+                    if activeSpots.count == 2 {
+                        let positionCode = activeSpots[0] * 10 + activeSpots[1]
 
-                    if  widthKeys.contains(positionCode) {
-                        scaleX = pinchRecognizer.scale
-                    } else if heightKeys.contains(positionCode) {
-                        scaleY = pinchRecognizer.scale
-                    } else{
-                        scaleX = pinchRecognizer.scale
-                        scaleY = pinchRecognizer.scale
+                        if  widthKeys.contains(positionCode) {
+                            scaleX = pinchRecognizer.scale
+                        } else if heightKeys.contains(positionCode) {
+                            scaleY = pinchRecognizer.scale
+                        } else{
+                            scaleX = pinchRecognizer.scale
+                            scaleY = pinchRecognizer.scale
+                        }
                     }
+                    self.transform = (self.transform.scaledBy(x: scaleX, y: scaleY))
+                    pinchRecognizer.scale = 1.0
                 }
-                self.transform = (self.transform.scaledBy(x: scaleX, y: scaleY))
-                pinchRecognizer.scale = 1.0
             }
         }
     }
@@ -158,13 +155,17 @@ class TappableRect: UIView {
     
     private func createSpots() {
         spotsFlag = 1
-        let radius :CGFloat = 10.0
+        let radius :CGFloat = areaToCatchTapInRect
         let minX = self.bounds.minX
         let minY = self.bounds.minY
         let maxX = self.bounds.maxX
         let maxY = self.bounds.maxY
-        let topLineX = self.frame.width / 2
-        
+//        var topLineX = self.frame.width / 2
+//        if minX < 0 {
+//            topLineX *= -1
+//        }
+        let topLineX = minX < 0 ? self.frame.width / -2 : self.frame.width / 2
+
         spots.append(CGPoint(x: minX, y: minY))
         spots.append(CGPoint(x: maxX, y: minY))
         spots.append(CGPoint(x: maxX, y: maxY))
@@ -177,14 +178,24 @@ class TappableRect: UIView {
          |          v
          4 < - - -  3
         */
-        
-        for spot in spots{
-            drawCircle(center: spot, radius: radius)
+
+        var mod = 0.0 //pi modifier
+        for index in 0..<5 {
+            if index == 4 {
+                drawCircle(center: spots[index], radius: radius, start: CGFloat(0), end:CGFloat(Double.pi))
+            } else {
+                drawCircle(center: spots[index], radius: radius, start: CGFloat(Double.pi * mod), end:CGFloat(Double.pi * (mod + 0.5)))
+            }
+            mod += 0.5
         }
     }
     
-      private func drawCircle(center: CGPoint , radius: CGFloat){
-            let circlePath = UIBezierPath(arcCenter: center, radius: radius, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
+    private func drawCircle(center: CGPoint , radius: CGFloat,start: CGFloat, end : CGFloat){
+            let circlePath = UIBezierPath(arcCenter: center,
+                                          radius: radius,
+                                          startAngle: start,
+                                          endAngle: end,
+                                          clockwise: true)
             let shapeLayer = CAShapeLayer()
             shapeLayer.path = circlePath.cgPath
             shapeLayer.fillColor = UIColor.clear.cgColor
@@ -195,7 +206,7 @@ class TappableRect: UIView {
     }
     
     // MARK: INITIAL SET
-
+  
    private func setGestures(){
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(singleTap)))
         self.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panRecog)))
@@ -206,4 +217,5 @@ class TappableRect: UIView {
         self.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchScale)))
         self.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotation)))
     }
+
 }
