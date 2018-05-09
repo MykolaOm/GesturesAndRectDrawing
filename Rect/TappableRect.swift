@@ -25,7 +25,6 @@ class TappableRect: UIView {
         super.init(frame: frame)
 
         self.backgroundColor = .blue
-//                randomColor()
         setGestures()
     }
     
@@ -55,7 +54,7 @@ class TappableRect: UIView {
     @objc private func changeColor(pan: UILongPressGestureRecognizer ) {
         pan.minimumPressDuration = 0.5
         if pan.state == UIGestureRecognizerState.ended {
-            self.backgroundColor = randomColor()
+            self.backgroundColor = RandomColorPicker.getColor()
         }
     }
     @objc private func panRecog(pan : UIPanGestureRecognizer){
@@ -110,18 +109,8 @@ class TappableRect: UIView {
             }
         }
     }
-    // MARK: VIEW COLOR
 
-    
-    func randomColor() -> UIColor {
-        let red = CGFloat(arc4random_uniform(256))/255
-        let green = CGFloat(arc4random_uniform(256))/255
-        let blue = CGFloat(arc4random_uniform(256))/255
-        return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
-    }
-    
     // MARK: SPOTS
-
    
     /* function aproves if touch on spot area inside rect */
     private func distance(_ a: [CGPoint], _ b: [CGPoint]) -> Bool {
@@ -182,27 +171,13 @@ class TappableRect: UIView {
         var mod = 0.0 //pi modifier
         for index in 0..<5 {
             if index == 4 {
-                drawCircle(center: spots[index], radius: radius, start: CGFloat(0), end:CGFloat(Double.pi))
+                self.layer.addSublayer(ArcLayerDrawer.drawCircle(center: spots[index], radius: radius, start: CGFloat(0), end: CGFloat(Double.pi)))
+                
             } else {
-                drawCircle(center: spots[index], radius: radius, start: CGFloat(Double.pi * mod), end:CGFloat(Double.pi * (mod + 0.5)))
+                self.layer.addSublayer(ArcLayerDrawer.drawCircle(center: spots[index], radius: radius, start: CGFloat(Double.pi * mod), end: CGFloat(Double.pi * (mod + 0.5))))
             }
             mod += 0.5
         }
-    }
-    
-    private func drawCircle(center: CGPoint , radius: CGFloat,start: CGFloat, end : CGFloat){
-            let circlePath = UIBezierPath(arcCenter: center,
-                                          radius: radius,
-                                          startAngle: start,
-                                          endAngle: end,
-                                          clockwise: true)
-            let shapeLayer = CAShapeLayer()
-            shapeLayer.path = circlePath.cgPath
-            shapeLayer.fillColor = UIColor.clear.cgColor
-            shapeLayer.strokeColor = UIColor.yellow.cgColor
-            shapeLayer.lineWidth = 2.0
-
-            self.layer.addSublayer(shapeLayer)
     }
     
     // MARK: INITIAL SET

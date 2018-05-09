@@ -36,7 +36,8 @@ class ViewController: UIViewController {
         tapCount += 1
         if tapCount == 1 {
             rectTopCornerPoint = tap.location(in: self.view)
-            drawCircle(center: rectTopCornerPoint, radius: CGFloat(15.0), viewSpot: self.view)
+            layerLast = ArcLayerDrawer.drawCircle(center: rectTopCornerPoint, radius: CGFloat(15.0), start: CGFloat(0), end: CGFloat(Double.pi * 2))
+            self.view.layer.addSublayer(layerLast)
         }
         else {
             rectBottomCornerPoint = tap.location(in: self.view)
@@ -98,18 +99,7 @@ class ViewController: UIViewController {
     
     override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
         let views = self.view.subviews
-        _ = views.map{$0.backgroundColor = TappableRect().randomColor()}
+        _ = views.map{$0.backgroundColor = RandomColorPicker.getColor()}
   }
-    
-    private func drawCircle(center: CGPoint , radius: CGFloat, viewSpot: UIView){
-        let circlePath = UIBezierPath(arcCenter: center, radius: radius, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = circlePath.cgPath
-        shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.strokeColor = UIColor.black.cgColor
-        shapeLayer.lineWidth = 2.0
-        layerLast = shapeLayer
-        viewSpot.layer.addSublayer(shapeLayer)
-    }
   
 }

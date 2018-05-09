@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1732CE3920A36260006019B0 /* ArcLayerDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1732CE3820A36260006019B0 /* ArcLayerDrawer.swift */; };
+		1732CE3B20A3686B006019B0 /* RandomColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1732CE3A20A3686B006019B0 /* RandomColorPicker.swift */; };
 		178A0435209DAD4B00020E2E /* TappableRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178A0434209DAD4A00020E2E /* TappableRect.swift */; };
 		179343F2209CF4BA00893C5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179343F1209CF4BA00893C5F /* AppDelegate.swift */; };
 		179343F4209CF4BA00893C5F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 179343F3209CF4BA00893C5F /* ViewController.swift */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1732CE3820A36260006019B0 /* ArcLayerDrawer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcLayerDrawer.swift; sourceTree = "<group>"; };
+		1732CE3A20A3686B006019B0 /* RandomColorPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomColorPicker.swift; sourceTree = "<group>"; };
 		178A0434209DAD4A00020E2E /* TappableRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappableRect.swift; sourceTree = "<group>"; };
 		179343EE209CF4BA00893C5F /* Rect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		179343F1209CF4BA00893C5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +67,8 @@
 				179343FA209CF4BA00893C5F /* LaunchScreen.storyboard */,
 				179343FD209CF4BA00893C5F /* Info.plist */,
 				178A0434209DAD4A00020E2E /* TappableRect.swift */,
+				1732CE3820A36260006019B0 /* ArcLayerDrawer.swift */,
+				1732CE3A20A3686B006019B0 /* RandomColorPicker.swift */,
 			);
 			path = Rect;
 			sourceTree = "<group>";
@@ -140,6 +146,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				178A0435209DAD4B00020E2E /* TappableRect.swift in Sources */,
+				1732CE3920A36260006019B0 /* ArcLayerDrawer.swift in Sources */,
+				1732CE3B20A3686B006019B0 /* RandomColorPicker.swift in Sources */,
 				179343F4209CF4BA00893C5F /* ViewController.swift in Sources */,
 				179343F2209CF4BA00893C5F /* AppDelegate.swift in Sources */,
 			);
