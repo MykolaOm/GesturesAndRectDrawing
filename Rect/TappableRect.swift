@@ -113,7 +113,7 @@ class TappableRect: UIView {
     // MARK: VIEW COLOR
 
     
-    private func randomColor() -> UIColor {
+    func randomColor() -> UIColor {
         let red = CGFloat(arc4random_uniform(256))/255
         let green = CGFloat(arc4random_uniform(256))/255
         let blue = CGFloat(arc4random_uniform(256))/255

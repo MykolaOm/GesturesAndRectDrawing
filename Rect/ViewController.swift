@@ -96,6 +96,10 @@ class ViewController: UIViewController {
         
     }
     
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+        let views = self.view.subviews
+        _ = views.map{$0.backgroundColor = TappableRect().randomColor()}
+  }
     
     private func drawCircle(center: CGPoint , radius: CGFloat, viewSpot: UIView){
         let circlePath = UIBezierPath(arcCenter: center, radius: radius, startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
