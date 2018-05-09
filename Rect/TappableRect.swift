@@ -15,7 +15,8 @@ class TappableRect: UIView {
     private var numberOfTouches = 0
     private var activeSpots = [Int]()
     private var spotsFlag = 0
-    private let areaToCatchTapInRect : CGFloat = 50.0 // less is too small .bigger is not comfort. if calculated - when small size. isn't comfort...
+    private let areaToCatchTapInRect : CGFloat = 50.0
+    // less is too small .bigger is not comfort. if calculated can become to small...
     /* keys for resizing */
     private let widthKeys = [12,21,34,43]
     private let heightKeys = [14,41,23,32]
@@ -149,10 +150,7 @@ class TappableRect: UIView {
         let minY = self.bounds.minY
         let maxX = self.bounds.maxX
         let maxY = self.bounds.maxY
-//        var topLineX = self.frame.width / 2
-//        if minX < 0 {
-//            topLineX *= -1
-//        }
+
         let topLineX = minX < 0 ? self.frame.width / -2 : self.frame.width / 2
 
         spots.append(CGPoint(x: minX, y: minY))
@@ -161,18 +159,15 @@ class TappableRect: UIView {
         spots.append(CGPoint(x: minX, y: maxY))
         spots.append(CGPoint(x: topLineX, y: minY))
 
-        /*  it is a numbers ,not an indexes.
-         1 - (5)- > 2
-         ^          |
-         |          v
-         4 < - - -  3
-        */
-
+        /*     1 - (5)- > 2   it is a numbers ,not an indexes.
+               ^          |
+               |          v
+               4 < - - -  3  */
+ 
         var mod = 0.0 //pi modifier
         for index in 0..<5 {
             if index == 4 {
                 self.layer.addSublayer(ArcLayerDrawer.drawCircle(center: spots[index], radius: radius, start: CGFloat(0), end: CGFloat(Double.pi)))
-                
             } else {
                 self.layer.addSublayer(ArcLayerDrawer.drawCircle(center: spots[index], radius: radius, start: CGFloat(Double.pi * mod), end: CGFloat(Double.pi * (mod + 0.5))))
             }
@@ -192,5 +187,6 @@ class TappableRect: UIView {
         self.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchScale)))
         self.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotation)))
     }
-
+    
 }
+

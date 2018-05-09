@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RandomColorPicker {
+class RandomColorPicker: CustomStringConvertible {
    
     class func getColor() -> UIColor {
       
@@ -17,6 +17,9 @@ class RandomColorPicker {
         let blue = CGFloat(arc4random_uniform(256))/255
       
         return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
+    }
+    var description: String {
+        return "Random UIColor with alpha 1.0"
     }
     
 }

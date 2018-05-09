@@ -9,7 +9,7 @@
 import UIKit
 
 
-class ArcLayerDrawer {
+class ArcLayerDrawer: CustomStringConvertible {
 
     class func drawCircle(center: CGPoint , radius: CGFloat,start: CGFloat, end : CGFloat) -> CAShapeLayer {
         let circlePath = UIBezierPath(arcCenter: center,
@@ -24,5 +24,9 @@ class ArcLayerDrawer {
         shapeLayer.lineWidth = 2.0
         
         return (shapeLayer)
+    }
+    
+    var description: String {
+        return "arc shape layer \nlinewidth: 2.0\ncolor: yellow "
     }
 }
