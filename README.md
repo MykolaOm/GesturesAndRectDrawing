@@ -9,6 +9,7 @@
   * Minimal rect size to draw 100x100
   * Tap once -> "tap shadow" appears , secont tap will create Rectangle and remove "tap shadow"
   * Tap&Drag will creare visual responding rectangle from touch to drag end
+  * Shake phone to change all rectangles color at once
 * Object editing :
   * Single tap on object to select and move it on top. 
   * Long tap changes object color
