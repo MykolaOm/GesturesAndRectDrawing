@@ -15,7 +15,7 @@ class TappableRect: UIView {
     private var numberOfTouches = 0
     private var activeSpots = [Int]()
     private var spotsFlag = 0
-    private let areaToCatchTapInRect : CGFloat = 50.0
+    private let areaToCatchTapInRect : CGFloat = 20.0
     // less is too small .bigger is not comfort. if calculated can become to small...
     /* keys for resizing */
     private let widthKeys = [12,21,34,43]
@@ -44,6 +44,7 @@ class TappableRect: UIView {
                 state = 0
             }
         }
+        print(state)
     }
     
     // MARK: GESTURES SETTINGS
@@ -76,6 +77,7 @@ class TappableRect: UIView {
     
     @objc private func pinchScale(byReactingTo pinchRecognizer: UIPinchGestureRecognizer){
         var touchArray = [pinchRecognizer.location(ofTouch: 0, in: self)]
+        print("in pinch")
         if pinchRecognizer.numberOfTouches == 2 {
             touchArray.append(pinchRecognizer.location(ofTouch: 1, in: self))
         }
@@ -115,6 +117,7 @@ class TappableRect: UIView {
    
     /* function aproves if touch on spot area inside rect */
     private func distance(_ a: [CGPoint], _ b: [CGPoint]) -> Bool {
+        print ("tap",a,b)
         activeSpots.removeAll()
         var result = false
         var distanceCounter = 0
@@ -153,25 +156,19 @@ class TappableRect: UIView {
 
         let topLineX = minX < 0 ? self.frame.width / -2 : self.frame.width / 2
 
-        spots.append(CGPoint(x: minX, y: minY))
-        spots.append(CGPoint(x: maxX, y: minY))
-        spots.append(CGPoint(x: maxX, y: maxY))
-        spots.append(CGPoint(x: minX, y: maxY))
-        spots.append(CGPoint(x: topLineX, y: minY))
+        spots.append(CGPoint(x: minX-radius, y: minY-radius))
+        spots.append(CGPoint(x: maxX+radius, y: minY-radius))
+        spots.append(CGPoint(x: maxX+radius, y: maxY+radius))
+        spots.append(CGPoint(x: minX-radius, y: maxY+radius))
+        spots.append(CGPoint(x: topLineX, y: minY-radius))
 
         /*     1 - (5)- > 2   it is a numbers ,not an indexes.
                ^          |
                |          v
                4 < - - -  3  */
- 
-        var mod = 0.0 //pi modifier
+
         for index in 0..<5 {
-            if index == 4 {
-                self.layer.addSublayer(ArcLayerDrawer.drawCircle(center: spots[index], radius: radius, start: CGFloat(0), end: CGFloat(Double.pi)))
-            } else {
-                self.layer.addSublayer(ArcLayerDrawer.drawCircle(center: spots[index], radius: radius, start: CGFloat(Double.pi * mod), end: CGFloat(Double.pi * (mod + 0.5))))
-            }
-            mod += 0.5
+            self.layer.addSublayer(ArcLayerDrawer.drawCircle(center: spots[index], radius: radius, start: CGFloat(0), end: CGFloat(Double.pi*2)))
         }
     }
     
