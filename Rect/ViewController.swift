@@ -51,7 +51,7 @@ class ViewController: UIViewController {
 
         let height = rectBottomCornerPoint.y - rectTopCornerPoint.y
         let width = rectBottomCornerPoint.x - rectTopCornerPoint.x
-        let size = CGSize(width: width, height: height)
+        var size = CGSize(width: width, height: height)
         let h = height < 0 ? height * (-1) : height
         let w = width < 0 ? width * (-1) : width
         //as told in requirements - don't draw small rects
@@ -59,9 +59,14 @@ class ViewController: UIViewController {
             tapCount = 0
             return
         }
-        
-        let newRect = TappableRect(frame: CGRect(origin: rectTopCornerPoint, size: size))
+        let resizer : CGFloat = 20.0
+        let modH = size.height < 0 ? -resizer : resizer
+        let modW = size.width < 0 ? -resizer : resizer
+        size.width += modW*4
+        size.height += modH*4
+        let extendPoint = CGPoint(x:rectTopCornerPoint.x + modW*(-2), y: rectTopCornerPoint.y + modH*(-2))
 
+        let newRect = TappableRect(frame: CGRect(origin: extendPoint, size: size))
         if isViewForPan {
             viewLast = newRect
         }

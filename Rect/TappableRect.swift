@@ -16,16 +16,14 @@ class TappableRect: UIView {
     private var activeSpots = [Int]()
     private var spotsFlag = 0
     private let areaToCatchTapInRect : CGFloat = 20.0
-    // less is too small .bigger is not comfort. if calculated can become to small...
-    /* keys for resizing */
-    private let widthKeys = [12,21,34,43]
-    private let heightKeys = [14,41,23,32]
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        let posX = self.bounds.minX < 0 ? self.bounds.minX : 0
+        let posY = self.bounds.minY < 0 ? self.bounds.minY : 0
+        self.addSubview(setInternalRect(posX,posY))
+        self.backgroundColor = .clear
 
-        self.backgroundColor = .blue
         setGestures()
     }
     
@@ -44,7 +42,6 @@ class TappableRect: UIView {
                 state = 0
             }
         }
-        print(state)
     }
     
     // MARK: GESTURES SETTINGS
@@ -56,17 +53,17 @@ class TappableRect: UIView {
     @objc private func changeColor(pan: UILongPressGestureRecognizer ) {
         pan.minimumPressDuration = 0.5
         if pan.state == UIGestureRecognizerState.ended {
-            self.backgroundColor = RandomColorPicker.getColor()
+            self.subviews.first?.backgroundColor = RandomColorPicker.getColor()
         }
     }
     @objc private func panRecog(pan : UIPanGestureRecognizer){
-            if pan.state == .began || pan.state == .changed {
-                let translation = pan.translation(in: pan.view?.superview)
-                let posX = (self.center.x) + translation.x
-                let posY = (self.center.y) + translation.y
-                self.center = CGPoint(x: posX, y: posY)
-                pan.setTranslation(CGPoint.zero, in: pan.view)
-            }
+        if pan.state == .began || pan.state == .changed {
+            let translation = pan.translation(in: pan.view?.superview)
+            let posX = (self.center.x) + translation.x
+            let posY = (self.center.y) + translation.y
+            self.center = CGPoint(x: posX, y: posY)
+            pan.setTranslation(CGPoint.zero, in: pan.view)
+        }
     }
     
     @objc private func singleTap(_ tap :UITapGestureRecognizer){
@@ -77,7 +74,6 @@ class TappableRect: UIView {
     
     @objc private func pinchScale(byReactingTo pinchRecognizer: UIPinchGestureRecognizer){
         var touchArray = [pinchRecognizer.location(ofTouch: 0, in: self)]
-        print("in pinch")
         if pinchRecognizer.numberOfTouches == 2 {
             touchArray.append(pinchRecognizer.location(ofTouch: 1, in: self))
         }
@@ -87,16 +83,8 @@ class TappableRect: UIView {
                     var scaleX : CGFloat = 1.0
                     var scaleY : CGFloat = 1.0
                     if activeSpots.count == 2 {
-                        let positionCode = activeSpots[0] * 10 + activeSpots[1]
-
-                        if  widthKeys.contains(positionCode) {
-                            scaleX = pinchRecognizer.scale
-                        } else if heightKeys.contains(positionCode) {
-                            scaleY = pinchRecognizer.scale
-                        } else{
                             scaleX = pinchRecognizer.scale
                             scaleY = pinchRecognizer.scale
-                        }
                     }
                     self.transform = (self.transform.scaledBy(x: scaleX, y: scaleY))
                     pinchRecognizer.scale = 1.0
@@ -117,7 +105,6 @@ class TappableRect: UIView {
    
     /* function aproves if touch on spot area inside rect */
     private func distance(_ a: [CGPoint], _ b: [CGPoint]) -> Bool {
-        print ("tap",a,b)
         activeSpots.removeAll()
         var result = false
         var distanceCounter = 0
@@ -143,9 +130,8 @@ class TappableRect: UIView {
     }
     private func removeSpots(){
         spotsFlag = 0
-        self.layer.sublayers?.removeAll()
+        self.layer.sublayers?.removeSubrange(1...5)
     }
-    
     private func createSpots() {
         spotsFlag = 1
         let radius :CGFloat = areaToCatchTapInRect
@@ -153,14 +139,13 @@ class TappableRect: UIView {
         let minY = self.bounds.minY
         let maxX = self.bounds.maxX
         let maxY = self.bounds.maxY
-
         let topLineX = minX < 0 ? self.frame.width / -2 : self.frame.width / 2
 
-        spots.append(CGPoint(x: minX-radius, y: minY-radius))
-        spots.append(CGPoint(x: maxX+radius, y: minY-radius))
-        spots.append(CGPoint(x: maxX+radius, y: maxY+radius))
-        spots.append(CGPoint(x: minX-radius, y: maxY+radius))
-        spots.append(CGPoint(x: topLineX, y: minY-radius))
+        spots.append(CGPoint(x: minX+areaToCatchTapInRect, y: minY+areaToCatchTapInRect))
+        spots.append(CGPoint(x: maxX-areaToCatchTapInRect, y: minY+areaToCatchTapInRect))
+        spots.append(CGPoint(x: maxX-areaToCatchTapInRect, y: maxY-areaToCatchTapInRect))
+        spots.append(CGPoint(x: minX+areaToCatchTapInRect, y: maxY-areaToCatchTapInRect))
+        spots.append(CGPoint(x: topLineX, y: minY+areaToCatchTapInRect))
 
         /*     1 - (5)- > 2   it is a numbers ,not an indexes.
                ^          |
@@ -175,15 +160,21 @@ class TappableRect: UIView {
     // MARK: INITIAL SET
   
    private func setGestures(){
-        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(singleTap)))
-        self.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panRecog)))
+        self.subviews.first?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(singleTap)))
+        self.subviews.first?.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panRecog)))
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
-        self.addGestureRecognizer(doubleTap)
-        self.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(changeColor)))
+        self.subviews.first?.addGestureRecognizer(doubleTap)
+        self.subviews.first?.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(changeColor)))
         self.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchScale)))
         self.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotation)))
+
     }
-    
+    private func setInternalRect(_ posX: CGFloat, _ posY: CGFloat) -> UIView {
+        let rectFrame = CGRect(x: posX+areaToCatchTapInRect*2, y: posY+areaToCatchTapInRect*2, width: self.frame.width - areaToCatchTapInRect*4, height: self.frame.height - areaToCatchTapInRect*4)
+        let view = UIView(frame: rectFrame)
+        view.backgroundColor = .blue
+        return(view)
+    }
 }
 
