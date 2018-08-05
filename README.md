@@ -1,6 +1,6 @@
 ### Main info:
 * App was tested on iPhone 8 plus simulator/physical device
-* Buit on XCode 9.3 (latest version)
+* Buit on XCode 9.4 (latest version)
 * No specific actions required to build and run
 
 ### How it's work
@@ -15,14 +15,14 @@
   * Long tap changes object color
   * Tap and Drag on object to move it
   * Double tap removes object
-  * Single tap adds/shows spots* on object 
+  * Single tap adds/shows spots* outside object 
   * Single tap remove spots if were shown
 * Resise and Rotate
   * Any action that requires multitouch should be over the desired object
-  * Tap on corner spots and drag to resize object
-  * Change object width or Height separately
-  * To resise all object use opposite corners (like top left and bottom right)
-  * Top side spot allows to rotate object, second tap must be inside object
+  * Tap on two corners spots and drag to resize object
+  * Tap on single corner spot to resize object by scaling it in both width and height
+  * Object width and height change simultaniusly
+  * Top side spot allows to rotate object, tap on Rectangle then tap on rotating spot("top spot")
   
   
 #### spot - is highlighted area to interact with object through tap on it
