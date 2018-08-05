@@ -48,7 +48,6 @@ class ViewController: UIViewController {
     }
     
     private func setNewRect(){
-
         let height = rectBottomCornerPoint.y - rectTopCornerPoint.y
         let width = rectBottomCornerPoint.x - rectTopCornerPoint.x
         var size = CGSize(width: width, height: height)
@@ -74,7 +73,7 @@ class ViewController: UIViewController {
 
     }
     
-    @objc private  func panRecog(pan : UIPanGestureRecognizer){
+    @objc private func panRecog(pan : UIPanGestureRecognizer){
         switch pan.state {
         case .began : rectTopCornerPoint = pan.location(ofTouch: 0, in: self.view)
             layerLast.removeFromSuperlayer()
@@ -104,7 +103,7 @@ class ViewController: UIViewController {
     
     override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
         let views = self.view.subviews
-        _ = views.map{$0.backgroundColor = RandomColorPicker.getColor()}
+        _ = views.map{$0.subviews.first?.backgroundColor = RandomColorPicker.getColor()}
   }
   
 }

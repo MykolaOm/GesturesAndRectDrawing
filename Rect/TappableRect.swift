@@ -57,6 +57,7 @@ class TappableRect: UIView {
         }
     }
     @objc private func panRecog(pan : UIPanGestureRecognizer){
+
         if pan.state == .began || pan.state == .changed {
             let translation = pan.translation(in: pan.view?.superview)
             let posX = (self.center.x) + translation.x
@@ -65,36 +66,37 @@ class TappableRect: UIView {
             pan.setTranslation(CGPoint.zero, in: pan.view)
         }
     }
-    
+
     @objc private func singleTap(_ tap :UITapGestureRecognizer){
-        superview?.bringSubview(toFront: (tap.view)!)
-        if spotsFlag == 0 { createSpots() }
-        else { removeSpots() }
+        if (self.subviews.first?.frame.contains(tap.location(ofTouch: 0, in: self)))!{
+            superview?.bringSubview(toFront: (tap.view)!)
+            if spotsFlag == 0 { createSpots() }
+            else { removeSpots() }
+        }
     }
+
     
     @objc private func pinchScale(byReactingTo pinchRecognizer: UIPinchGestureRecognizer){
         var touchArray = [pinchRecognizer.location(ofTouch: 0, in: self)]
         if pinchRecognizer.numberOfTouches == 2 {
             touchArray.append(pinchRecognizer.location(ofTouch: 1, in: self))
         }
-        if distance(touchArray, spots) {
-            if !activeSpots.contains(5) {
-                if pinchRecognizer.state == .began || pinchRecognizer.state == .changed {
+        if distance(touchArray, spots) && !activeSpots.contains(5) {
+            if pinchRecognizer.state == .began || pinchRecognizer.state == .changed {
                     var scaleX : CGFloat = 1.0
                     var scaleY : CGFloat = 1.0
                     if activeSpots.count == 2 {
-                            scaleX = pinchRecognizer.scale
-                            scaleY = pinchRecognizer.scale
-                    }
-                    self.transform = (self.transform.scaledBy(x: scaleX, y: scaleY))
-                    pinchRecognizer.scale = 1.0
+                    scaleX = pinchRecognizer.scale
+                    scaleY = pinchRecognizer.scale
                 }
+                self.transform = (self.transform.scaledBy(x: scaleX, y: scaleY))
+            pinchRecognizer.scale = 1.0
             }
         }
     }
     @objc private func rotation(gestureRecognizer : UIRotationGestureRecognizer){
-        if state == 1, activeSpots.contains(5) {
-            if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
+        if state == 1, activeSpots.contains(5)  {
+              if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
                 self.transform = self.transform.rotated(by: gestureRecognizer.rotation)
                 gestureRecognizer.rotation = 0
             }
@@ -160,11 +162,11 @@ class TappableRect: UIView {
     // MARK: INITIAL SET
   
    private func setGestures(){
-        self.subviews.first?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(singleTap)))
-        self.subviews.first?.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panRecog)))
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(singleTap)))
+        self.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panRecog)))
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapped))
         doubleTap.numberOfTapsRequired = 2
-        self.subviews.first?.addGestureRecognizer(doubleTap)
+        self.addGestureRecognizer(doubleTap)
         self.subviews.first?.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(changeColor)))
         self.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(pinchScale)))
         self.addGestureRecognizer(UIRotationGestureRecognizer(target: self, action: #selector(rotation)))
