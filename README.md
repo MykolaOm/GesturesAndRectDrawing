@@ -26,3 +26,5 @@
   
   
 #### spot - is highlighted area to interact with object through tap on it
+how it's look 
+https://youtu.be/NkQczwdSLTY
