@@ -65,6 +65,14 @@ class TappableRect: UIView {
                 }
             
         }
+        else if activeSpots.count > 0, !activeSpots.isEmpty, !spots.isEmpty,activeSpots[0] == 5 {
+            if pan.state == .changed {
+                let endPoint = pan.location(in: self)
+                let rotateModifier = rotationModifier(startPointO, endPoint)
+                self.transform = self.transform.rotated(by: rotateModifier)
+            }
+            
+        }
         else if isInside(startPointO){ //pan.location(ofTouch: 0, in: self)
             if pan.state == .began || pan.state == .changed {
                 let translation = pan.translation(in: pan.view?.superview)
@@ -197,6 +205,9 @@ class TappableRect: UIView {
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         startPointO = gestureRecognizer.location(ofTouch: 0, in: self)
         return true
+    }
+    private func rotationModifier( _ a: CGPoint , _ b: CGPoint) -> CGFloat {
+        return(atan2((b.y - a.y), (b.x - a.x)))
     }
 }
 

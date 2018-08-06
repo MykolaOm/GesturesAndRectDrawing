@@ -23,6 +23,7 @@
   * Tap on single corner spot to resize object by scaling it in both width and height
   * Object width and height change simultaniusly
   * Top side spot allows to rotate object, tap on Rectangle then tap on rotating spot("top spot")
+  * Onefinger rotation alowed on top spot(not so smoothly as with two fingers)
   
   
 #### spot - is highlighted area to interact with object through tap on it
