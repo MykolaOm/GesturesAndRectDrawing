@@ -57,10 +57,10 @@ class TappableRect: UIView {
         var dist : CGFloat = 0.0
         if activeSpots.count > 0, !activeSpots.isEmpty, !spots.isEmpty,activeSpots[0] != 5 {
             let startPoint = spots[activeSpots[0]]
-                if pan.state == .ended {
+                if pan.state == .changed {
                    let endPoint = pan.location(in: self)
                    dist = distance(startPoint, endPoint)
-                   let scaleFactor = (dist/100)/1.8
+                   let scaleFactor = (dist/100)/2
                    self.transform = self.transform.scaledBy(x: scaleFactor, y: scaleFactor)
                 }
             
