@@ -104,6 +104,12 @@ class ViewController: UIViewController {
     override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
         let views = self.view.subviews
         _ = views.map{$0.subviews.first?.backgroundColor = RandomColorPicker.getColor()}
+        views.forEach{changeColorAnimated(for: $0.subviews.first!, to: RandomColorPicker.getColor(), duration: 1.0, options: .curveEaseIn) }
   }
-  
+    
+    private func changeColorAnimated(for view: UIView,to color: UIColor, duration: TimeInterval, options: UIViewAnimationOptions) {
+        UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
+            view.backgroundColor = color
+        }, completion: nil)
+    }
 }
