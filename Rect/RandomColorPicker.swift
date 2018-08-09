@@ -9,7 +9,6 @@
 import UIKit
 
 class RandomColorPicker: CustomStringConvertible {
-   
     class func getColor() -> UIColor {
       
         let red = CGFloat(arc4random_uniform(256))/255
@@ -18,8 +17,12 @@ class RandomColorPicker: CustomStringConvertible {
       
         return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
     }
+    class func changeColorAnimated(for view: UIView,to color: UIColor, duration: TimeInterval, options: UIViewAnimationOptions) {
+        UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
+            view.backgroundColor = color
+        }, completion: nil)
+    }
     var description: String {
         return "Random UIColor with alpha 1.0"
     }
-    
 }

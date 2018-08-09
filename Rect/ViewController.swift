@@ -9,7 +9,6 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
     private var tapCount = 0
     private var tapFinishDrow = 0 {
         didSet {
@@ -21,18 +20,12 @@ class ViewController: UIViewController {
     private var layerLast = CALayer()
     private var viewLast : UIView?
     private var isViewForPan = false
-  
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setGestures()
-    
-        
     }
     @objc private func tapOccured(_ tap: UITapGestureRecognizer) {
-        
         tapCount += 1
         if tapCount == 1 {
             rectTopCornerPoint = tap.location(in: self.view)
@@ -64,15 +57,12 @@ class ViewController: UIViewController {
         size.width += modW*4
         size.height += modH*4
         let extendPoint = CGPoint(x:rectTopCornerPoint.x + modW*(-2), y: rectTopCornerPoint.y + modH*(-2))
-
         let newRect = TappableRect(frame: CGRect(origin: extendPoint, size: size))
         if isViewForPan {
             viewLast = newRect
         }
         view.addSubview(newRect)
-
     }
-    
     @objc private func panRecog(pan : UIPanGestureRecognizer){
         switch pan.state {
         case .began : rectTopCornerPoint = pan.location(ofTouch: 0, in: self.view)
@@ -87,29 +77,18 @@ class ViewController: UIViewController {
         case .ended :
             isViewForPan = false
             viewLast = nil
-
         default:
             return
         }
-
     }
-    
    private func setGestures(){
          self.view.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(panRecog(pan:))))
         let gestTap = UITapGestureRecognizer(target: self, action: #selector(tapOccured(_ :)))
         self.view.addGestureRecognizer(gestTap)
         
     }
-    
     override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
         let views = self.view.subviews
-        _ = views.map{$0.subviews.first?.backgroundColor = RandomColorPicker.getColor()}
-        views.forEach{changeColorAnimated(for: $0.subviews.first!, to: RandomColorPicker.getColor(), duration: 1.0, options: .curveEaseIn) }
+        views.forEach{RandomColorPicker.changeColorAnimated(for: $0.subviews.first!, to: RandomColorPicker.getColor(), duration: 1.0, options: .curveEaseIn) }
   }
-    
-    private func changeColorAnimated(for view: UIView,to color: UIColor, duration: TimeInterval, options: UIViewAnimationOptions) {
-        UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
-            view.backgroundColor = color
-        }, completion: nil)
-    }
 }
